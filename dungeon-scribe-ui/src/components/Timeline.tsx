@@ -74,11 +74,11 @@ export default function Timeline() {
             <div className="small">
               character：{(e.characters||[]).map(id=>charName[id]||id).join(', ') || '—'}
               {' | '}
-              地点：{e.location ? (locName[e.location] || e.location) : '—'}
+              Location：{e.location ? (locName[e.location] || e.location) : '—'}
             </div>
             {/* 显示Task名 */}
             <div className="small" style={{marginTop:4}}>
-              Task: {(e.questIds||[]).map(id=>qName[id]||id).join(', ') || '—'}
+              Quest: {(e.questIds||[]).map(id=>qName[id]||id).join(', ') || '—'}
             </div>
             {e.summary && <div style={{marginTop:6}}>{e.summary}</div>}
           </div>
