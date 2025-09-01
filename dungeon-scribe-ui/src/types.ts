@@ -1,5 +1,5 @@
 export type NodeType = "CHARACTER"|"LOCATION"|"QUEST"|"NPC"|"LORE"|"ITEM"|"EVENT";
-export const TABS = ['Timeline', 'Recall', 'Graph'] as const;
+export const TABS = ['Timeline'] as const;
 export type Tab = typeof TABS[number];
 
 export interface Character { id:string; name:string; tags?:string[] }

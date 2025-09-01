@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Header } from './components/Header'
 import Timeline from './components/Timeline'
-import Recall from './components/Recall'
-import GraphView from './components/GraphView'
 import type { Tab } from './types'   // ← 引入 Tab
 
 export default function App() {
@@ -18,8 +16,6 @@ export default function App() {
     <>
       <Header tab={tab} setTab={setTab} />  {/* 类型现在完全匹配 */}
       {tab==='Timeline' && <Timeline/>}
-      {tab==='Recall'   && <Recall/>}
-      {tab==='Graph'    && <GraphView/>}
     </>
   )
 }
