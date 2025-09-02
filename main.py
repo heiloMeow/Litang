@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 import json
 import asyncio
 
-# 创建API应用
+# 这一行代码是 创建 FastAPI 应用对象 的地方，是整个项目的“入口”。
 app = FastAPI(title="我的多模块项目API", version="1.0.0")
 
 # 挂载静态文件（前端页面）
@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 def root():
     """API状态检查"""
-    return {"status": "API正在运行", "message": "欢迎使用多模块项目API"}
+    return {"status": "API正在运行", "message": "您成功进入DS_Proj_API"}
 
 @app.get("/health")
 def health_check():
@@ -105,6 +105,46 @@ def get_audio_list():
     # TODO: 从数据库获取音频文件列表
     return {"files": [], "count": 0}
 
+@app.post("/api/audio/start")
+def start_recording():
+    """开始录制音频"""
+    try:
+        # TODO: 这里调用另一个团队的录音模块开始录制
+        # 比如：audio_module.start_record()
+        
+        print("API收到开始录制请求")
+        
+        return {
+            "message": "开始录制",
+            "status": "recording_started"
+        }
+        
+    except Exception as e:
+        return {
+            "error": str(e),
+            "status": "failed"
+        }
+    
+@app.post("/api/audio/stop")
+def stop_recording():
+    """停止录制音频"""
+    try:
+        # TODO: 这里调用另一个团队的录音模块停止录制
+        # 比如：audio_data = audio_module.stop_record()
+        
+        print("API收到停止录制请求")
+        
+        return {
+            "message": "停止录制",
+            "audio_file": "录制完成.wav",  # 这个以后会是真实文件名
+            "status": "recording_stopped"
+        }
+        
+    except Exception as e:
+        return {
+            "error": str(e),
+            "status": "failed"
+        }
 # ================================
 # 实时音频处理（WebSocket）
 # ================================
@@ -216,6 +256,5 @@ if __name__ == "__main__":
     uvicorn.run(
         app, 
         host="127.0.0.1", 
-        port=8000,
-        reload=True  # 开发模式，代码改动自动重启
+        port=8000
     )
