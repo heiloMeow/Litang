@@ -11,7 +11,7 @@ export default function SessionBar() {
     getActiveSession().then(setActive)
   }, [])
 
-  useEffect(() => {
+  useEffect(() => {//更新会话时间
     if (!active) return
     const t = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(t)
