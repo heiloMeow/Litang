@@ -77,6 +77,61 @@ def batch_analyze_text(data: dict):
 # 音频处理接口
 # ================================
 
+import tempfile
+import threading
+from pathlib import Path
+
+from pipeline_fixed_v3 import process_audio_offline
+
+@app.post("/api/audio/process_file")
+async def process_audio_file_offline(file: UploadFile = File(...), num_speakers: int = 1):
+    """
+    离线音频文件处理：上传文件 -> 语音转文字 + 说话人识别
+    """
+    try:
+        # 1. 保存上传的文件到临时目录
+        temp_dir = Path("temp")
+        temp_dir.mkdir(exist_ok=True)
+        
+        file_path = temp_dir / file.filename
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+        
+        # 2. 调用音频处理（这里先模拟，等会儿替换成真实调用）
+        # result = process_audio_offline(str(file_path), num_speakers)
+        
+        # 现在先返回模拟结果
+        result = {
+            "filename": file.filename,
+            "num_speakers": num_speakers,
+            "status": "completed",
+            "transcript": [
+                {
+                    "speaker": "Speaker_1",
+                    "start": 0.0,
+                    "end": 3.2,
+                    "text": "Hello, this is a test."
+                },
+                {
+                    "speaker": "Speaker_2", 
+                    "start": 3.5,
+                    "end": 6.8,
+                    "text": "Yes, I can hear you clearly."
+                }
+            ],
+            "output_dir": "待实现"
+        }
+        
+        return result
+        
+    except Exception as e:
+        return {
+            "filename": file.filename if file else "unknown",
+            "error": str(e),
+            "status": "failed"
+        }
+
 @app.post("/api/audio/upload")
 async def upload_audio(file: UploadFile = File(...)):
     """音频文件上传接口"""
@@ -88,16 +143,33 @@ async def upload_audio(file: UploadFile = File(...)):
         "status": "uploaded"
     }
 
-@app.post("/api/audio/process")
-async def process_audio_file(file: UploadFile = File(...)):
+@app.post("/api/audio/process") 
+async def process_audio_file(file: UploadFile = File(...), num_speakers: int = 2):
     """音频处理接口"""
-    # TODO: 调用音频处理模块
-    return {
-        "filename": file.filename,
-        "duration": "未知",
-        "result": "待实现音频分析",
-        "status": "processed"
-    }
+    try:
+        # 保存上传的文件
+        from pathlib import Path
+        from pipeline_fixed_v3 import process_audio_offline
+        
+        Path("temp").mkdir(exist_ok=True)
+        file_path = Path("temp") / file.filename
+        
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+        
+        # 调用真实的音频处理
+        result = process_audio_offline(str(file_path), num_speakers)
+        result["filename"] = file.filename
+        
+        return result
+        
+    except Exception as e:
+        return {
+            "filename": file.filename,
+            "error": str(e),
+            "status": "failed"
+        }
 
 @app.get("/api/audio/list")
 def get_audio_list():

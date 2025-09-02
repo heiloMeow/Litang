@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>录音测试</title>
+    <title>音频文件处理测试</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,64 +17,92 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        .start {
+        .process {
             background-color: #4CAF50;
-            color: white;
-        }
-        .stop {
-            background-color: #f44336;
             color: white;
         }
         .button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
+        input[type="file"] {
+            margin: 20px;
+            padding: 10px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            text-align: left;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>简单录音测试</h1>
+    <h1>音频处理测试</h1>
     
-    <button id="startBtn" class="button start" onclick="startRecording()">
-        🎤 开始录制
+    <input type="file" id="audioFile" accept="audio/*">
+    <br>
+    <label>说话人数量: <input type="number" id="numSpeakers" value="2" min="1" max="10"></label>
+    <br>
+    <button id="processBtn" class="button process" onclick="processAudio()">
+        🎵 处理音频文件
     </button>
     
-    <button id="stopBtn" class="button stop" onclick="stopRecording()" disabled>
-        ⏹️ 停止录制
-    </button>
-    
-    <p id="status">点击开始录制按钮</p>
+    <p id="status">请选择音频文件</p>
+    <div id="result"></div>
 
     <script>
-        async function startRecording() {
-            document.getElementById('startBtn').disabled = true;
-            document.getElementById('stopBtn').disabled = false;
-            document.getElementById('status').innerText = '正在录制中...';
+        async function processAudio() {
+            const fileInput = document.getElementById('audioFile');
+            const numSpeakers = document.getElementById('numSpeakers').value;
+            const statusElement = document.getElementById('status');
+            const resultElement = document.getElementById('result');
+            
+            if (!fileInput.files[0]) {
+                alert('请先选择音频文件！');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            statusElement.innerText = '正在处理音频文件，请稍候...';
+            document.getElementById('processBtn').disabled = true;
             
             try {
-                const response = await fetch('/api/audio/start', {
-                    method: 'POST'
+                const response = await fetch(`/api/audio/process?num_speakers=${numSpeakers}`, {
+                    method: 'POST',
+                    body: formData
                 });
+                
                 const result = await response.json();
-                console.log('开始录制结果:', result);
+                
+                if (result.status === 'success') {
+                    statusElement.innerText = '处理完成！';
+                    displayResult(result);
+                } else {
+                    statusElement.innerText = '处理失败：' + result.error;
+                }
+                
             } catch (error) {
-                console.error('开始录制失败:', error);
+                statusElement.innerText = '处理出错：' + error.message;
+            } finally {
+                document.getElementById('processBtn').disabled = false;
             }
         }
-
-        async function stopRecording() {
-            document.getElementById('startBtn').disabled = false;
-            document.getElementById('stopBtn').disabled = true;
-            document.getElementById('status').innerText = '录制完成！';
+        
+        function displayResult(result) {
+            const resultElement = document.getElementById('result');
+            let html = '<h3>转录结果：</h3>';
             
-            try {
-                const response = await fetch('/api/audio/stop', {
-                    method: 'POST'
-                });
-                const result = await response.json();
-                console.log('停止录制结果:', result);
-            } catch (error) {
-                console.error('停止录制失败:', error);
-            }
+            result.transcript.forEach(item => {
+                html += `<p><strong>${item.speaker}</strong> [${item.start.toFixed(1)}s - ${item.end.toFixed(1)}s]: ${item.text}</p>`;
+            });
+            
+            resultElement.innerHTML = html;
+            resultElement.style.display = 'block';
         }
     </script>
 </body>
