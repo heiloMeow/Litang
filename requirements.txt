@@ -1,0 +1,35 @@
+# 基础API框架依赖
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# 文件处理
+python-multipart==0.0.6
+
+# WebSocket支持
+websockets==12.0
+
+# 数据库（SQLite是Python内置的，但可能需要ORM）
+# sqlalchemy==2.0.23  # 如果你想用ORM的话
+
+# 以下是你可能需要的库，根据你的具体模块取消注释：
+
+# NLP相关（根据你的NLP模块选择）
+# numpy==1.24.3
+# pandas==2.0.3
+# scikit-learn==1.3.0
+# transformers==4.35.0
+# torch==2.1.0
+# jieba==0.42.1  # 中文分词
+
+# 音频处理相关
+# librosa==0.10.1
+# pydub==0.25.1
+# scipy==1.11.4
+# soundfile==0.12.1
+# wave  # Python内置
+
+# 其他可能用到的库
+# requests==2.31.0
+# aiofiles==23.2.0  # 异步文件操作
+# python-jose==3.3.0  # JWT认证
+# python-dotenv==1.0.0  # 环境变量

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多模块项目 - 测试界面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .recording {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 多模块项目测试界面</h1>
+        <div id="apiStatus" class="status offline">⚠️ 正在检查API状态...</div>
+    </div>
+
+    <!-- 数据库模块 -->
+    <div class="container">
+        <h2 class="section-title">💾 数据库模块</h2>
+        <div class="form-group">
+            <button onclick="checkDatabase()">检查数据库状态</button>
+            <button onclick="initDatabase()">初始化数据库</button>
+            <button onclick="getDataList()">获取数据列表</button>
+        </div>
+        <div id="databaseResult" class="result">数据库操作结果将在这里显示...</div>
+    </div>
+
+    <!-- NLP模块 -->
+    <div class="container">
+        <h2 class="section-title">🧠 NLP文本分析模块</h2>
+        <div class="form-group">
+            <label for="textInput">输入要分析的文本：</label>
+            <textarea id="textInput" rows="4" placeholder="在这里输入文本..."></textarea>
+        </div>
+        <div class="form-group">
+            <button onclick="analyzeText()">分析文本</button>
+            <button onclick="batchAnalyze()">批量分析</button>
+        </div>
+        <div id="nlpResult" class="result">NLP分析结果将在这里显示...</div>
+    </div>
+
+    <!-- 音频处理模块 -->
+    <div class="container">
+        <h2 class="section-title">🎵 音频处理模块</h2>
+        
+        <!-- 文件上传 -->
+        <div class="form-group">
+            <label for="audioFile">选择音频文件：</label>
+            <input type="file" id="audioFile" accept="audio/*">
+        </div>
+        <div class="form-group">
+            <button onclick="uploadAudio()">上传音频</button>
+            <button onclick="processAudio()">处理音频</button>
+            <button onclick="getAudioList()">获取音频列表</button>
+        </div>
+        
+        <!-- 实时录音 -->
+        <div class="form-group">
+            <label>实时录音：</label>
+            <button id="startRecording" onclick="startRecording()">🎤 开始录音</button>
+            <button id="stopRecording" onclick="stopRecording()" disabled>⏹️ 停止录音</button>
+        </div>
+        
+        <div id="audioResult" class="result">音频处理结果将在这里显示...</div>
+    </div>
+
+    <!-- 综合处理 -->
+    <div class="container">
+        <h2 class="section-title">⚙️ 综合处理模块</h2>
+        <div class="form-group">
+            <label for="completeFile">选择文件进行完整处理：</label>
+            <input type="file" id="completeFile" accept="audio/*">
+        </div>
+        <div class="form-group">
+            <label for="processOptions">处理选项：</label>
+            <select id="processOptions">
+                <option value='{"mode":"basic"}'>基础处理</option>
+                <option value='{"mode":"advanced"}'>高级处理</option>
+                <option value='{"mode":"realtime"}'>实时处理</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button onclick="completeProcess()">执行完整处理</button>
+        </div>
+        <div id="completeResult" class="result">综合处理结果将在这里显示...</div>
+    </div>
+
+    <!-- 系统管理 -->
+    <div class="container">
+        <h2 class="section-title">🔧 系统管理</h2>
+        <div class="form-group">
+            <button onclick="getSystemStats()">获取系统统计</button>
+            <button onclick="clearAllData()" style="background: #dc3545;">清空所有数据</button>
+        </div>
+        <div id="adminResult" class="result">管理操作结果将在这里显示...</div>
+    </div>
+
+    <!-- WebSocket状态 -->
+    <div class="container">
+        <h2 class="section-title">🔗 实时连接状态</h2>
+        <div class="form-group">
+            <button onclick="connectWebSocket()">连接实时音频</button>
+            <button onclick="disconnectWebSocket()">断开连接</button>
+        </div>
+        <div id="wsStatus" class="status offline">WebSocket: 未连接</div>
+        <div id="wsResult" class="result">实时数据将在这里显示...</div>
+    </div>
+
+    <script>
+        // 全局变量
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let websocket = null;
+        
+        // 页面加载时检查API状态
+        window.onload = function() {
+            checkAPIStatus();
+        };
+        
+        // ================================
+        // 基础功能
+        // ================================
+        
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                document.getElementById('apiStatus').innerHTML = '✅ API连接正常';
+                document.getElementById('apiStatus').className = 'status online';
+            } catch (error) {
+                document.getElementById('apiStatus').innerHTML = '❌ API连接失败';
+                document.getElementById('apiStatus').className = 'status offline';
+            }
+        }
+        
+        // ================================
+        // 数据库相关函数
+        // ================================
+        
+        async function checkDatabase() {
+            try {
+                const response = await fetch('/api/database/status');
+                const data = await response.json();
+                document.getElementById('databaseResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('databaseResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function initDatabase() {
+            try {
+                const response = await fetch('/api/database/init', {method: 'POST'});
+                const data = await response.json();
+                document.getElementById('databaseResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('databaseResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function getDataList() {
+            try {
+                const response = await fetch('/api/data/list');
+                const data = await response.json();
+                document.getElementById('databaseResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('databaseResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        // ================================
+        // NLP相关函数
+        // ================================
+        
+        async function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) {
+                alert('请输入要分析的文本');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/nlp/analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({text: text})
+                });
+                const data = await response.json();
+                document.getElementById('nlpResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('nlpResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function batchAnalyze() {
+            const text = document.getElementById('textInput').value;
+            const texts = text.split('\n').filter(t => t.trim());
+            
+            if (texts.length === 0) {
+                alert('请输入要批量分析的文本（每行一个）');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/nlp/batch', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({texts: texts})
+                });
+                const data = await response.json();
+                document.getElementById('nlpResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('nlpResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        // ================================
+        // 音频处理相关函数
+        // ================================
+        
+        async function uploadAudio() {
+            const fileInput = document.getElementById('audioFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('请选择音频文件');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/audio/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('audioResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('audioResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function processAudio() {
+            const fileInput = document.getElementById('audioFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('请选择音频文件');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/audio/process', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('audioResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('audioResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function getAudioList() {
+            try {
+                const response = await fetch('/api/audio/list');
+                const data = await response.json();
+                document.getElementById('audioResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('audioResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        // 开始录音
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
+                    // 这里可以发送给服务器处理
+                    document.getElementById('audioResult').textContent = '录音完成，大小: ' + audioBlob.size + ' 字节';
+                };
+                
+                mediaRecorder.start();
+                document.getElementById('startRecording').disabled = true;
+                document.getElementById('stopRecording').disabled = false;
+                document.getElementById('startRecording').className = 'recording';
+                document.getElementById('audioResult').textContent = '🎤 正在录音...';
+                
+            } catch (error) {
+                document.getElementById('audioResult').textContent = '录音失败: ' + error.message;
+            }
+        }
+        
+        // 停止录音
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                document.getElementById('startRecording').disabled = false;
+                document.getElementById('stopRecording').disabled = true;
+                document.getElementById('startRecording').className = '';
+            }
+        }
+        
+        // ================================
+        // 综合处理函数
+        // ================================
+        
+        async function completeProcess() {
+            const fileInput = document.getElementById('completeFile');
+            const file = fileInput.files[0];
+            const options = document.getElementById('processOptions').value;
+            
+            if (!file) {
+                alert('请选择要处理的文件');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('options', options);
+            
+            try {
+                const response = await fetch('/api/process/complete', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('completeResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('completeResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        // ================================
+        // 系统管理函数
+        // ================================
+        
+        async function getSystemStats() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                const data = await response.json();
+                document.getElementById('adminResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('adminResult').textContent = '错误: ' + error.message;
+            }
+        }
+        
+        async function clearAllData() {
+            if (confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+                try {
+                    const response = await fetch('/api/admin/clear', {method: 'DELETE'});
+                    const data = await response.json();
+                    document.getElementById('adminResult').textContent = JSON.stringify(data, null, 2);
+                } catch (error) {
+                    document.getElementById('adminResult').textContent = '错误: ' + error.message;
+                }
+            }
+        }
+        
+        // ================================
+        // WebSocket相关函数
+        // ================================
+        
+        function connectWebSocket() {
+            try {
+                websocket = new WebSocket('ws://127.0.0.1:8000/ws/audio');
+                
+                websocket.onopen = () => {
+                    document.getElementById('wsStatus').innerHTML = '🟢 WebSocket: 已连接';
+                    document.getElementById('wsStatus').className = 'status online';
+                };
+                
+                websocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    document.getElementById('wsResult').textContent = JSON.stringify(data, null, 2);
+                };
+                
+                websocket.onclose = () => {
+                    document.getElementById('wsStatus').innerHTML = '🔴 WebSocket: 已断开';
+                    document.getElementById('wsStatus').className = 'status offline';
+                };
+                
+                websocket.onerror = (error) => {
+                    document.getElementById('wsResult').textContent = 'WebSocket错误: ' + error;
+                };
+                
+            } catch (error) {
+                document.getElementById('wsResult').textContent = '连接失败: ' + error.message;
+            }
+        }
+        
+        function disconnectWebSocket() {
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+        }
+    </script>
+</body>
+</html>
