@@ -1,11 +1,8 @@
-// src/components/SessionPage.tsx
 import React, { useEffect, useMemo, useState } from 'react'
 import { getActiveSession, startSession, endSession } from '../api/mock'
 import type { Session } from '../types'
 import './SessionPage.css'
 
-// Clean, minimal, centered around 40% viewport height
-// 极简、现代、内容居于视口约 40% 处
 export default function SessionPage() {
   const [active, setActive] = useState<Session | null>(null)
   const [title, setTitle] = useState('')
@@ -36,7 +33,9 @@ export default function SessionPage() {
     return 'Good evening'
   }, [now])
 
-  const tagline = active ? 'Session is live. Happy adventuring!' : 'Ready to dive into your campaign?'
+  const tagline = active
+    ? 'Session is live. Happy adventuring!'
+    : 'Ready to dive into your campaign?'
 
   async function onStart() {
     const s = await startSession(title.trim() || undefined)
@@ -51,35 +50,59 @@ export default function SessionPage() {
 
   return (
     <main className="page session-page">
-      {/* Shell uses grid rows to place content around 40% viewport height */}
-      {/* 通过网格行控制内容出现在视口约 40% 处 */}
       <section className="sp-shell">
         <header className="sp-hero">
           <h1 className="sp-title">{greeting}!</h1>
           <p className="sp-subtitle">{tagline}</p>
         </header>
 
-        <div className="sp-card">
-          {active ? (
+        {/* is-live / is-idle 控制整体过渡 */}
+        <div className={`sp-card ${active ? 'is-live' : 'is-idle'}`}>
+          <div className="sp-card__inner">
             <div className="sp-row">
-              <div className="sp-live">
-                <span aria-hidden>●</span>
-                <strong className="sp-time">{elapsed}</strong>
-                {active.title ? <span className="sp-note">({active.title})</span> : null}
+              {/* 左侧：输入 与 Live 胶囊 交错淡入 */}
+              <div className="sp-left" aria-live="polite">
+                <div className="sp-pane sp-pane--idle" aria-hidden={!!active}>
+                  <input
+                    className="sp-input"
+                    placeholder="Session title (optional)"
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                  />
+                </div>
+
+                <div className="sp-pane sp-pane--live" aria-hidden={!active}>
+                  <div className="sp-live">
+                    <span className="dot" aria-hidden>●</span>
+                    <strong className="sp-time">{elapsed}</strong>
+                    {active?.title ? <span className="sp-note">({active.title})</span> : null}
+                    <span className="sp-meter" aria-hidden>
+                      <i></i><i></i><i></i><i></i><i></i>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <button className="sp-btn sp-btn-danger" onClick={onEnd}>End Session</button>
+
+              {/* 右侧：Start 与 End 按钮交错淡入，容器定宽避免跳动 */}
+              <div className="sp-right" aria-live="polite">
+                <button
+                  className="sp-btn sp-btn-primary sp-pane sp-pane--idle"
+                  aria-hidden={!!active}
+                  onClick={onStart}
+                >
+                  Start Session
+                </button>
+
+                <button
+                  className="sp-btn sp-btn-danger sp-pane sp-pane--live"
+                  aria-hidden={!active}
+                  onClick={onEnd}
+                >
+                  End Session
+                </button>
+              </div>
             </div>
-          ) : (
-            <div className="sp-row">
-              <input
-                className="sp-input"
-                placeholder="Session title (optional)"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-              />
-              <button className="sp-btn sp-btn-primary" onClick={onStart}>Start Session</button>
-            </div>
-          )}
+          </div>
         </div>
       </section>
     </main>
