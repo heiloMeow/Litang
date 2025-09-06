@@ -12,6 +12,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* session 基础样式（保留你原有的） */
 .session { display:flex; gap:8px; align-items:center; }
 .session .pill { background:#121620; border:1px solid #2a2f3a; padding:4px 10px; border-radius:999px; }
 .session .pill span { color:#e86a6a; } /* 红色小点 */
@@ -21,22 +23,22 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
-a:hover {
-  color: #535bf2;
+a:hover { color: #535bf2; }
+
+html, body, #root {
+  height: 100%;
+  min-height: 100dvh; /* 配合 app.css 的 flex 布局 */
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* 关键：不要让 body 居中，也不要设置 padding，这些交给页面自己 */
+  display: block;
   min-width: 320px;
-  min-height: 100vh;
+  background: var(--bg, #242424); /* 与 :root 对齐 */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+h1 { font-size: 3.2em; line-height: 1.1; }
 
 button {
   border-radius: 8px;
@@ -49,11 +51,8 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
+button:hover { border-color: #646cff; }
+button:focus, button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
@@ -62,10 +61,6 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  a:hover { color: #747bff; }
+  button { background-color: #f9f9f9; }
 }

@@ -1,0 +1,155 @@
+/* SessionPage.css
+ * Minimal, modern, elegant. Content sits ~40% from top.
+ * 极简、现代、优雅；内容停在距顶部约 40% 的位置
+*/
+
+/* ---------- Theme / 主题 ---------- */
+.page.session-page {
+  --bg: #0f1115;
+  --text: #e6e8ef;
+  --muted: #a1a8b5;
+  --panel: #141824;
+  --border: rgba(255,255,255,.08);
+  --ring: rgba(124, 92, 255, .35);
+  --accent: #7c5cff;
+  --accent-strong: #6a4bff;
+  --danger: #ff6b6b;
+  --success: #18c964;
+
+  color: var(--text);
+  background: var(--bg);
+
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;        /* no vertical scroll / 禁止纵向滚动 */
+  display: block;
+}
+
+/* ---------- Layout shell / 布局容器 ----------
+   用三行网格：40vh | auto | 1fr，将主体落在第二行，达到约 40% 的视觉位置
+*/
+.sp-shell {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 40vh auto auto 1fr; /* ← 从 3 行改为 4 行 */
+  align-content: start;
+  justify-items: center;
+  padding-inline: 24px;
+}
+
+/* ---------- Hero / 顶部问候区 ---------- */
+.sp-hero {
+  grid-row: 2;            /* 放在第二行：位于 40vh 之后 */
+  text-align: center;
+  max-width: 760px;
+  width: min(760px, 100%);
+  margin: 0;
+}
+.sp-title {
+  margin: 0;
+  font-size: clamp(26px, 4.5vw, 36px);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.sp-subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: clamp(14px, 2vw, 16px);
+}
+
+/* ---------- Card / 功能卡片 ---------- */
+.sp-card {
+  grid-row: 3;            /* 与标题同一行，紧随其后 */
+  margin-top: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: min(760px, 100%);
+  padding: clamp(14px, 2vw, 18px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+/* ---------- Row / 单行布局 ---------- */
+.sp-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.sp-input {
+  flex: 1;                 /* 占满剩余空间 */
+  width: auto;             /* 不要写死 100% */
+  min-width: 0;            /* 防止挤压时溢出 */
+}
+
+/* ---------- Live pill / 直播状态 ---------- */
+.sp-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #182033;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  width: fit-content;
+}
+.sp-live > span:first-child { color: var(--success); }
+.sp-time { font-variant-numeric: tabular-nums; letter-spacing: .3px; }
+.sp-note { color: var(--muted); }
+
+/* ---------- Input / 输入框 ---------- */
+.sp-input {
+  appearance: none;
+  outline: none;
+  width: 100%;
+  min-width: 220px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #0f1422;
+  color: var(--text);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.sp-input::placeholder { color: #7c859a; }
+.sp-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* ---------- Buttons / 按钮 ---------- */
+.sp-btn {
+  appearance: none;
+  outline: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #202538;
+  color: var(--text);
+  transition: transform .06s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+}
+.sp-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
+.sp-btn:active { transform: translateY(0); box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+.sp-btn:focus-visible { box-shadow: 0 0 0 4px var(--ring); border-color: var(--accent); }
+
+.sp-btn-primary {
+  background: var(--accent);
+  border-color: transparent;
+}
+.sp-btn-primary:hover { background: var(--accent-strong); }
+.sp-btn-danger {
+  background: #3a2226;
+  border-color: rgba(255, 107, 107, .5);
+}
+.sp-btn-danger:hover { background: #4a252a; }
+
+/* ---------- Responsive / 响应式 ---------- */
+@media (max-width: 560px) {
+  .sp-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .sp-btn { width: 100%; }
+}

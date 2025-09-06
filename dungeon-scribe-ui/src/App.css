@@ -1,42 +1,33 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* 全局根节点占满高度，便于 flex 布局生效 */
+html, body, #root {
+  height: 100%;
+  min-height: 100dvh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 还原 body：不再用 place-items 居中，避免与内部布局冲突 */
+body {
+  margin: 0;
+  background: #242424;         /* 可与 index.css 的 root 主题色对齐 */
+  color: rgba(255, 255, 255, 0.87);
+  display: block;              /* 关键：不要在 body 上做居中 */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* App 外层容器：纵向排列，Header 在上，Main 自动填满 */
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* 主内容区域占满剩余空间，让内部页面自己做居中 */
+.app-main {
+  flex: 1;
+  display: block;              /* 内部页面（如 SessionPage）自行决定布局 */
+  min-height: 0;               /* 防止溢出 */
+  overflow: hidden;            /* 主区域内不出现滚动条 */
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+/* 如需保留一些卡片/链接/按钮默认样式，可按需添加
+   .card { padding: 2em; }
+   .read-the-docs { color: #888; }
+*/
