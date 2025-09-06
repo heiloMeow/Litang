@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Header } from './components/Header'
 import Timeline from './components/Timeline'
 import Recall from './components/Recall'
 import GraphView from './components/GraphView'
-import type { Tab } from './types'   // ← 引入 Tab
+import type { Tab } from './types'
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('Timeline')  // ← 用统一类型
+  const [tab, setTab] = useState<Tab>('Timeline')
 
   return (
     <>
-      <Header tab={tab} setTab={setTab} />  {/* 类型现在完全匹配 */}
+      <Header tab={tab} setTab={setTab} />
       {tab==='Timeline' && <Timeline/>}
       {tab==='Recall'   && <Recall/>}
       {tab==='Graph'    && <GraphView/>}
