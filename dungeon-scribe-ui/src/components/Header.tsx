@@ -1,6 +1,5 @@
 import React from 'react'
 import { Tab, TABS } from '../types'
-import SessionBar from './SessionBar'
 import './Header.css'
 
 // Header component: main navigation bar of the app
@@ -12,7 +11,7 @@ export function Header(props: { tab: Tab; setTab: (t: Tab) => void }) {
   return (
     <header>
       {/* App title / 应用标题 */}
-      <img className="header-img" src="\public\icons\header-img.png" alt="AI Dungeon Master Memory Engine Logo" />
+      <img className="header-img" src="/icons/header-img.png" alt="AI Dungeon Master Memory Engine Logo" />
       <h1>AI Dungeon Master Memory Engine</h1> 
 
       <nav>
@@ -28,12 +27,6 @@ export function Header(props: { tab: Tab; setTab: (t: Tab) => void }) {
           </button>
         ))}
       </nav>
-
-      <div className="right">
-        {/* Right side bar with session info */}
-        {/* 右侧区域：显示会话信息 */}
-        <SessionBar />
-      </div>
     </header>
   )
 }

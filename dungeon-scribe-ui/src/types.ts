@@ -1,5 +1,7 @@
+// types.ts
 export type NodeType = "CHARACTER"|"LOCATION"|"QUEST"|"NPC"|"LORE"|"ITEM"|"EVENT";
-export const TABS = ['Timeline', 'Recall', 'Graph'] as const;
+
+export const TABS = ['Session', 'Timeline', 'Recall', 'Graph'] as const;
 export type Tab = typeof TABS[number];
 
 export interface Character { id:string; name:string; tags?:string[] }
@@ -10,7 +12,7 @@ export interface EventNode {
   id:string;
   type:"EVENT";
   title:string;
-  ts:number;                 // epoch ms
+  ts:number;
   characters:string[];
   location?:string;
   questIds?:string[];
@@ -26,7 +28,6 @@ export interface Edge {
 export interface Session {
   id: string;
   title?: string;
-  startedAt: number;   // epoch ms
+  startedAt: number;
   endedAt?: number;
 }
-
