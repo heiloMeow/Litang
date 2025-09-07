@@ -1,32 +1,32 @@
 import React from 'react'
 import { Tab, TABS } from '../types'
-import './Header.css'
+import './Header.css' // 新增：样式文件
 
-// Header component: main navigation bar of the app
-// Header 组件：应用的主导航栏
-
+// Header: app's main navigation bar
+// Header：应用的主导航栏（左标题 + 右侧标签）
 export function Header(props: { tab: Tab; setTab: (t: Tab) => void }) {
   const { tab, setTab } = props
 
   return (
-    <header>
-      {/* App title / 应用标题 */}
-      <img className="header-img" src="/icons/header-img.png" alt="AI Dungeon Master Memory Engine Logo" />
-      <h1>AI Dungeon Master Memory Engine</h1> 
+    <header className="header" aria-label="App Header">
+      <div className="header-inner">
+        {/* Title / 标题 */}
+        <h1 className="header-title">AI Dungeon Master Memory Engine</h1>
 
-      <nav>
-        {/* Navigation tabs dynamically generated from TABS */}
-        {/* 导航标签，基于 TABS 动态生成 */}
-        {TABS.map(t => (
-          <button
-            key={t}
-            className={tab === t ? 'active' : ''}
-            onClick={() => setTab(t)}
-          >
-            {t}
-          </button>
-        ))}
-      </nav>
+        {/* Tabs / 导航标签 */}
+        <nav className="header-nav" aria-label="Primary navigation">
+          {TABS.map(t => (
+            <button
+              key={t}
+              type="button"
+              className={`header-tab ${tab === t ? 'is-active' : ''}`}
+              onClick={() => setTab(t)}
+            >
+              {t}
+            </button>
+          ))}
+        </nav>
+      </div>
     </header>
   )
 }
