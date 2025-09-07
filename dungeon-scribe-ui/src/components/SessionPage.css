@@ -1,28 +1,37 @@
-/* SessionPage.css — minimal & modern; content ~40% viewport, smooth state switch */
+/* SessionPage.css
+ * Minimal & modern design for session page
+ * 简洁现代的会话页面样式
+ * - Hero 区域：问候语 + 副标题
+ * - Card 区域：输入框 / 计时器 + Start/End 按钮
+ * - 动画过渡 + 炫彩边框反馈
+ */
 
+/* ===== 全局容器 ===== */
+/* 页面背景和基础变量 */
 .page.session-page {
-  --bg: #0f1115;
-  --text: #e6e8ef;
-  --muted: #a1a8b5;
-  --panel: #141824;
-  --border: rgba(255,255,255,.08);
-  --ring: rgba(124, 92, 255, .35);
-  --accent: #7c5cff;
-  --accent-strong: #6a4bff;
-  --danger: #ff6b6b;
-  --success: #18c964;
+  --bg: #0f1115;              /* 页面背景色 / page background */
+  --text: #e6e8ef;            /* 主文本颜色 / main text color */
+  --muted: #a1a8b5;           /* 弱化文本 / muted text */
+  --panel: #141824;           /* 面板背景 / panel background */
+  --border: rgba(255,255,255,.08); /* 边框颜色 / border color */
+  --ring: rgba(124, 92, 255, .35); /* 聚焦环 / focus ring */
+  --accent: #7c5cff;          /* 主色 / primary accent */
+  --accent-strong: #6a4bff;   /* 主色 hover / accent hover */
+  --danger: #ff6b6b;          /* 危险色 / danger */
+  --success: #18c964;         /* 成功色 / success */
 
-  /* ✅ 统一控件高度：按钮/输入/胶囊都用它 */
+  /* 控件统一高度：按钮/输入框/胶囊保持一致 */
+  /* Unified control height: buttons/inputs/live capsule */
   --control-h: 48px;
 
   color: var(--text);
   background: var(--bg);
   height: 100%;
-  min-height: 0;
-  overflow: hidden; /* no vertical scroll */
+  overflow: hidden; /* 禁止滚动条 / prevent scrollbars */
 }
 
-/* Place content around 40% */
+/* ===== Shell 布局 ===== */
+/* 内容垂直布局，大致定位在视口 40% 高度处 */
 .sp-shell {
   height: 100%;
   display: grid;
@@ -32,24 +41,21 @@
   padding-inline: 24px;
 }
 
-/* ===== Hero（标题 + 分割线）===== */
+/* ===== Hero 区域（问候语 + 副标题 + 分割线） ===== */
 .sp-hero {
   grid-row: 2;
   text-align: center;
   max-width: 760px;
   width: min(760px, 100%);
-
-  position: relative;   /* 让 ::after 能定位 */
-  z-index: 2;           /* 分割线位于卡片之上，避免被阴影“吃掉” */
-  padding-bottom: 14px; /* 给分割线留空间 */
-  margin-bottom: 8px;   /* 分割线与下方内容的间距 */
+  position: relative;
+  padding-bottom: 14px; /* 留出分割线空间 */
+  margin-bottom: 8px;
 }
 
 .sp-title {
   margin: 0;
   font-size: clamp(26px, 4.5vw, 36px);
   font-weight: 800;
-  letter-spacing: .2px;
 }
 .sp-subtitle {
   margin: 10px 0 0;
@@ -57,43 +63,32 @@
   font-size: clamp(14px, 2vw, 16px);
 }
 
-/* 分割线（细、柔、全宽） */
+/* Hero 下方分割线 / Divider below hero */
 .sp-hero::after {
   content: "";
   position: absolute;
-  left: 0; right: 0;
-  bottom: 0;
+  left: 0; right: 0; bottom: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,0.1),
-    transparent
-  );
-  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
 }
 
-/* ===== Card（功能区，带炫彩边框）===== */
+/* ===== Card 区域（核心功能区） ===== */
 .sp-card {
   grid-row: 3;
   width: min(760px, 100%);
-  padding: 2px;                     /* 渐变边框厚度 */
+  padding: 2px;              /* 渐变边框厚度 / gradient border thickness */
   border-radius: 16px;
-  background: var(--border);        /* 未激活：平静边框 */
+  background: var(--border); /* 默认静态边框 / idle border */
   box-shadow: 0 12px 30px rgba(0,0,0,.35);
-
-  /* 与分割线保持清晰间隔 */
   margin-top: 22px;
-  position: relative;
-  z-index: 1; /* 低于 .sp-hero，确保分割线可见 */
 }
 .sp-card__inner {
   background: var(--panel);
-  border-radius: 14px;              /* 16 - 2 */
+  border-radius: 14px;
   padding: clamp(14px, 2vw, 18px);
 }
 
-/* Seamless gradient ring via conic + custom property (no flicker) */
+/* Live 状态下的炫彩边框 / Gradient border when live */
 @property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .sp-card.is-live {
   background: conic-gradient(from var(--angle),
@@ -103,7 +98,7 @@
 }
 @keyframes sp-rotate { to { --angle: 1turn; } }
 
-/* Fallback: 老浏览器（无 conic/@property）使用来回渐变避免跳变 */
+/* Fallback: 无 conic-gradient 时使用线性渐变 */
 @supports not (background: conic-gradient(from 0deg, red, blue)) {
   .sp-card.is-live {
     background: linear-gradient(120deg,
@@ -117,34 +112,36 @@
   }
 }
 
-/* 行布局 */
+/* ===== 行布局（左：输入/计时器，右：按钮） ===== */
 .sp-row { display: flex; align-items: center; gap: 12px; }
 
-/* ===== 左侧：输入（idle）与 Live 胶囊（live）交错显隐，固定高度不塌陷 ===== */
+/* ===== 左侧（输入框 / 计时器） ===== */
 .sp-left { position: relative; flex: 1; min-height: var(--control-h); }
 .sp-left .sp-pane {
   position: absolute; inset: 0;
   display: flex; align-items: center;
-  opacity: 0; transform: translateY(8px); filter: blur(.25px); pointer-events: none;
+  opacity: 0; transform: translateY(8px); filter: blur(.25px);
+  pointer-events: none;
   transition: opacity .28s ease, transform .28s ease, filter .28s ease;
 }
+/* 状态切换动画 / State transition */
 .is-idle .sp-left .sp-pane--idle,
 .is-live .sp-left .sp-pane--live {
   opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto;
 }
 
-/* ===== 右侧：Start / End 交错显隐，容器定宽+定高避免“变扁/跳动” ===== */
+/* ===== 右侧（按钮容器） ===== */
 .sp-right {
   position: relative;
-  width: 180px;           /* 固定宽度，避免切换抖动 */
-  min-width: 180px;
+  width: 180px; min-width: 180px;
   height: var(--control-h);
   display: grid; place-items: center;
 }
 .sp-right .sp-pane {
   position: absolute; inset: 0;
   display: inline-flex; justify-content: center; align-items: center;
-  opacity: 0; transform: translateY(8px); filter: blur(.25px); pointer-events: none;
+  opacity: 0; transform: translateY(8px); filter: blur(.25px);
+  pointer-events: none;
   transition: opacity .28s ease, transform .28s ease, filter .28s ease;
 }
 .is-idle .sp-right .sp-pane--idle,
@@ -152,12 +149,12 @@
   opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto;
 }
 
-/* ===== 输入框（胶囊风，高度统一） ===== */
+/* ===== 输入框（胶囊风格） ===== */
 .sp-input {
-  flex: 1; min-width: 0; appearance: none; outline: none;
+  flex: 1; min-width: 0;
   height: var(--control-h);
   padding: 0 14px;
-  border-radius: calc(var(--control-h) / 2); /* 胶囊 */
+  border-radius: calc(var(--control-h) / 2);
   border: 1px solid var(--border);
   background: #0f1422; color: var(--text);
   transition: border-color .18s ease, box-shadow .18s ease;
@@ -165,7 +162,7 @@
 .sp-input::placeholder { color: #7c859a; }
 .sp-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring); }
 
-/* ===== Live 胶囊（高度统一） ===== */
+/* ===== Live 胶囊（显示计时器） ===== */
 .sp-live {
   display: inline-flex; align-items: center; gap: 10px;
   min-height: var(--control-h);
@@ -175,57 +172,61 @@
   white-space: nowrap;
 }
 .sp-live .dot { color: var(--success); }
-.sp-time { font-variant-numeric: tabular-nums; letter-spacing: .3px; }
+.sp-time { font-variant-numeric: tabular-nums; }
 .sp-note { color: var(--muted); }
 
-/* 等化器条 */
+/* 动态音频条 / Equalizer-style animation */
 .sp-meter { display: inline-flex; align-items: flex-end; gap: 3px; height: 14px; margin-left: 8px; }
 .sp-meter i {
   width: 3px; height: 6px; border-radius: 2px; background: #7c5cff;
-  display: inline-block; animation: sp-bar 900ms ease-in-out infinite; transform-origin: bottom center;
+  display: inline-block;
+  animation: sp-bar 900ms ease-in-out infinite;
+  transform-origin: bottom center;
 }
 .sp-meter i:nth-child(2){animation-delay:120ms}
 .sp-meter i:nth-child(3){animation-delay:240ms}
 .sp-meter i:nth-child(4){animation-delay:360ms}
 .sp-meter i:nth-child(5){animation-delay:480ms}
-@keyframes sp-bar { 0%,100%{height:6px;opacity:.85} 50%{height:14px;opacity:1} }
+@keyframes sp-bar {
+  0%,100% { height:6px; opacity:.85 }
+  50% { height:14px; opacity:1 }
+}
 
-/* ===== 按钮（胶囊风，高度统一） ===== */
+/* ===== 按钮（胶囊风格） ===== */
 .sp-btn {
-  appearance: none; outline: none; border: 1px solid var(--border);
   min-height: var(--control-h);
-  line-height: 1;              /* 防止受全局行高影响而“扁” */
-  padding: 0 18px;             /* 高度由 min-height 控制 */
+  padding: 0 18px;
   border-radius: calc(var(--control-h) / 2);
-  font-weight: 700; cursor: pointer;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border);
   background: #202538; color: var(--text);
-  transition: transform .06s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  transition: transform .06s ease, box-shadow .18s ease, background .18s ease;
 }
 .sp-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
 .sp-btn:active { transform: translateY(0); box-shadow: 0 6px 16px rgba(0,0,0,.35); }
-.sp-btn:focus-visible { box-shadow: 0 0 0 4px var(--ring); border-color: var(--accent); }
 .sp-btn-primary { background: var(--accent); border-color: transparent; }
 .sp-btn-primary:hover { background: var(--accent-strong); }
 .sp-btn-danger { background: #3a2226; border-color: rgba(255,107,107,.5); }
 .sp-btn-danger:hover { background: #4a252a; }
 
-/* Only allow selecting text in inputs 仅允许输入框文字被选中 */
+/* ===== 文本选择控制 ===== */
+/* 禁止选择非输入内容，避免误选 / Only allow text selection in inputs */
 .page.session-page {
   -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
-  -webkit-touch-callout:none;
 }
 .page.session-page input,
 .page.session-page textarea,
 .page.session-page [contenteditable="true"],
 .page.session-page .sp-input {
   -webkit-user-select:text; -moz-user-select:text; -ms-user-select:text; user-select:text;
-  -webkit-touch-callout:default;
 }
 
-/* Responsive */
+/* ===== 响应式 ===== */
+/* 小屏幕下按钮换行堆叠 / On small screens, buttons stack vertically */
 @media (max-width: 560px) {
   .sp-row { align-items: stretch; }
   .sp-right { width: 100%; min-width: 0; }
-  .sp-right .sp-pane { position: static; } /* 小屏直接堆叠，省去 overlay */
+  .sp-right .sp-pane { position: static; }
   .sp-btn { width: 100%; }
 }
