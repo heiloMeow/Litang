@@ -1,33 +1,58 @@
-/* 全局根节点占满高度，便于 flex 布局生效 */
+/* =======================================
+   App.css — Application Shell Layout Styles
+   App.css — 应用外壳布局样式
+   ---------------------------------------
+   - Only controls top-level structure (Header + Main)
+   - Does NOT control component visuals
+   - 仅负责顶层结构（Header + Main）
+   - 不负责具体组件的视觉样式
+   ======================================= */
+
+/* Root elements fill the full height to support flex layout
+   根节点占满高度，保证 Flex 布局能撑满屏幕 */
 html, body, #root {
   height: 100%;
-  min-height: 100dvh;
+  min-height: 100dvh;  /* Dynamic viewport height for mobile compatibility / 动态视口高度，兼容移动端 */
 }
 
-/* 还原 body：不再用 place-items 居中，避免与内部布局冲突 */
+/* Body base setup
+   - Remove default margin
+   - Apply dark background and light text
+   - Do not center here; centering is handled by individual pages
+   Body 的基础设置
+   - 去掉默认 margin
+   - 应用深色背景和浅色字体
+   - 不在此居中，居中由页面自己决定 */
 body {
   margin: 0;
-  background: #242424;         /* 可与 index.css 的 root 主题色对齐 */
+  background: #242424;
   color: rgba(255, 255, 255, 0.87);
-  display: block;              /* 关键：不要在 body 上做居中 */
+  display: block;
 }
 
-/* App 外层容器：纵向排列，Header 在上，Main 自动填满 */
+/* Application shell container
+   - Vertical flex layout
+   - Header stays on top, Main fills remaining space
+   App 外层容器
+   - 使用纵向 Flex 布局
+   - Header 固定在上，Main 占满剩余空间 */
 .app-shell {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
-/* 主内容区域占满剩余空间，让内部页面自己做居中 */
+/* Main content area
+   - Takes remaining space
+   - Pages (SessionPage / Timeline / etc.) manage their own layout
+   - Hide scrollbars on the main container
+   主内容区域
+   - 占满剩余空间
+   - 页面（SessionPage / Timeline / 等）自行决定布局
+   - 隐藏主区域自身滚动条 */
 .app-main {
   flex: 1;
-  display: block;              /* 内部页面（如 SessionPage）自行决定布局 */
-  min-height: 0;               /* 防止溢出 */
-  overflow: hidden;            /* 主区域内不出现滚动条 */
+  display: block;
+  min-height: 0;       /* Prevent children from overflowing / 避免子元素溢出撑高容器 */
+  overflow: hidden;
 }
-
-/* 如需保留一些卡片/链接/按钮默认样式，可按需添加
-   .card { padding: 2em; }
-   .read-the-docs { color: #888; }
-*/

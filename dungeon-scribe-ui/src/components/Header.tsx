@@ -1,10 +1,9 @@
-import React from 'react'
 import { Tab, TABS } from '../types'
-import './Header.css' // 新增：样式文件
+import './Header.css'
 
 // Header: app's main navigation bar
 // Header：应用的主导航栏（左标题 + 右侧标签）
-export function Header(props: { tab: Tab; setTab: (t: Tab) => void }) {
+export default function Header(props: { tab: Tab; setTab: (t: Tab) => void }) {
   const { tab, setTab } = props
 
   return (
