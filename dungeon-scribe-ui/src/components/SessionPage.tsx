@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { Session } from '../types'
 import './SessionPage.css'
+import { getActiveSession, startSession as apiStartSession, endSession as apiEndSession } from '../api/mock'
 
 export default function SessionPage() {
   // 当前会话状态（null = 未开始）
   // Current active session state (null = not started)
   const [active, setActive] = useState<Session | null>(null)
+  const [busy, setBusy] = useState(false)
 
   // 输入框中的标题
   // Title input for the session
@@ -22,6 +24,22 @@ export default function SessionPage() {
     const t = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(t)
   }, [active])
+
+  // 初始化：查询是否已有未结束的会话（来自 mock API / 可切换为真实接口）
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      try {
+        const s = await getActiveSession()
+        if (alive && s) setActive(s)
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+    return () => {
+      alive = false
+    }
+  }, [])
 
   // 计算会话已用时（hh:mm:ss）
   // Calculate elapsed session time (hh:mm:ss)
@@ -54,22 +72,33 @@ export default function SessionPage() {
   // Start Session 按钮点击
   // Handle Start Session button click
   async function onStart() {
-    // TODO: replace with real API call
-    const s: Session = {
-      id: `sess-${Date.now()}`,
-      title: title.trim() || undefined,
-      startedAt: Date.now(),
+    if (busy) return
+    setBusy(true)
+    try {
+      const s = await apiStartSession(title.trim() || undefined)
+      setActive(s)
+      setTitle('')
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setBusy(false)
     }
-    setActive(s)
-    setTitle('')
   }
 
   // End Session 按钮点击
   // Handle End Session button click
   async function onEnd() {
-    if (!active) return
-    // TODO: replace with real API call
-    setActive({ ...active, endedAt: Date.now() })
+    if (!active || busy) return
+    setBusy(true)
+    try {
+      await apiEndSession(active.id)
+      // End 后切回空闲态；如需展示结束时间，可改为 setActive({...active, endedAt: Date.now()})
+      setActive(null)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -120,6 +149,7 @@ export default function SessionPage() {
                   className="sp-btn sp-btn-primary sp-pane sp-pane--idle"
                   aria-hidden={!!active}
                   onClick={onStart}
+                  disabled={busy}
                 >
                   Start Session
                 </button>
@@ -128,6 +158,7 @@ export default function SessionPage() {
                   className="sp-btn sp-btn-danger sp-pane sp-pane--live"
                   aria-hidden={!active}
                   onClick={onEnd}
+                  disabled={busy}
                 >
                   End Session
                 </button>
