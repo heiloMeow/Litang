@@ -8,21 +8,26 @@ import type { Tab } from './types'
 import './app.css'
 
 /**
- * App component: application entry point
- * App 组件：应用入口
+ * App
+ * -----
+ * Main application entry point.
  *
- * - Holds the global navigation state (tab)
- * - Controls which page (Session / Timeline / Recall / Graph) is displayed
- * - 全局管理导航状态（tab）
- * - 决定显示哪一个页面（Session / Timeline / Recall / Graph）
+ * Responsibilities:
+ * - Holds the global navigation state (`tab`).
+ * - Controls which page (Session / Timeline / Recall / Graph) is displayed.
+ *
+ * @component
  */
 export default function App() {
+  /** Current active tab in the application. */
   const [tab, setTab] = useState<Tab>('Session')
 
   return (
     <div className="app-shell">
+      {/* Header component manages navigation buttons and passes tab state. */}
       <Header tab={tab} setTab={setTab} />
 
+      {/* Main content area: renders different pages based on current tab. */}
       <main className="app-main">
         {tab === 'Session'  && <SessionPage />}
         {tab === 'Timeline' && <Timeline />}

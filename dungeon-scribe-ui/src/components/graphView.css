@@ -1,0 +1,105 @@
+/* src/components/graphView.css */
+
+/* ===== Graph container (fills the remaining height in app-main) ===== */
+.graph-full {
+  position: relative;
+  flex: 1;                 /* occupy all remaining space in parent */
+  min-height: 520px;       /* fallback height */
+  background: #0f1219;
+  border: 1px solid #22283a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== Cytoscape canvas covers the container ===== */
+#graph {
+  position: absolute;
+  inset: 0;
+}
+
+/* ===== Generic overlay: positioning only (layout defined per overlay) ===== */
+.overlay {
+  position: absolute;
+  z-index: 10;
+}
+
+/* ===== Search overlay (top-left) ===== */
+.search-overlay {
+  top: 10px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 22, 31, 0.6);
+  border: 1px solid #22283a;
+  border-radius: 8px;
+  padding: 8px;
+  backdrop-filter: blur(4px);
+}
+
+/* ===== Legend / Details overlay (top-right) ===== */
+.legend-overlay {
+  right: 12px;
+  bottom: 70px;                       /* leave space for the FAB */
+  display: block;
+  width: 320px;
+  max-height: calc(100% - 20px);
+  overflow: auto;
+  background: rgba(17, 22, 31, 0.363);
+  border: 1px solid #22283a;
+  border-radius: 12px;
+  padding: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.legend-overlay h3 {
+  margin: 0 0 8px;
+}
+
+/* ===== Floating Action Button (bottom-right) ===== */
+.legend-fab {
+  all: unset;                          /* reset global <button> styles */
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid #2d3a59;
+  background: #11161f6b;
+  color: #e6e6e6;
+  cursor: pointer;
+  z-index: 11;
+  box-sizing: border-box;
+}
+.legend-fab:hover {
+  background: #161d2a5e;
+}
+
+/* ===== Details / Legend rows ===== */
+.kv {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 8px;
+  align-items: start;
+  margin: 6px 0;
+}
+.kv-k { opacity: 0.85; font-size: 12px; }
+.kv-v { font-size: 13px; }
+.kv-v.multiline { white-space: pre-wrap; }
+
+.legend-row {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.legend-label { font-size: 14px; font-weight: 600; }
+.legend-hint  { font-size: 12px; opacity: 0.8; }
+.legend-edge-label { font-size: 13px; }
+
+.tip { margin-top: 12px; opacity: 0.85; }

@@ -51,8 +51,8 @@ body {
    - 页面（SessionPage / Timeline / 等）自行决定布局
    - 隐藏主区域自身滚动条 */
 .app-main {
-  flex: 1;
-  display: block;
-  min-height: 0;       /* Prevent children from overflowing / 避免子元素溢出撑高容器 */
-  overflow: hidden;
+  flex: 1;         /* 把剩余高度交给 main */
+  min-height: 0;   /* 防止子元素被挤爆 */
+  display: flex;   /* 让子页可以继续 flex 拉伸 */
+  flex-direction: column;
 }
