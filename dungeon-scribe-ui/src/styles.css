@@ -1,23 +1,42 @@
 /* ===== Global App Base (Dark) ========================================= */
 
-/* Color tokens & radii for easy theming */
 :root {
+  /* 
+   * Tell the browser this page is using a dark color scheme.
+   * This affects built-in UI elements like scrollbars, form controls,
+   * and helps browsers / OS apply correct contrast in dark mode.
+   */
   color-scheme: dark;
-  --bg-app:        #0f1115;
-  --fg-main:       #e6e6e6;
 
-  --surface-1:     #151823;
-  --surface-2:     #1b1f2a;
-  --surface-3:     #121620;
+  /* ================= Base Colors ================= */
+  --bg-app: #0f1115;    /* Application background (overall page background) */
+  --fg-main: #e6e6e6;   /* Default text color for content */
 
-  --border-1:      #22283a;
-  --border-2:      #2a2f3a;
+  /* ================= Surface Layers =================
+   * These represent different "elevation" levels of UI surfaces.
+   * Use them to keep consistency when designing cards, buttons,
+   * panels, or input fields. Darker → lower level, lighter → higher.
+   */
+  --surface-1: #151823;  /* Primary card background (general content blocks) */
+  --surface-2: #1b1f2a;  /* Secondary surfaces (buttons, nav backgrounds) */
+  --surface-3: #121620;  /* Input fields, subtle UI elements */
 
-  --brand:         #6aa0ff;
+  /* ================= Borders ================= */
+  --border-1: #22283a;   /* Default border color (cards, panels) */
+  --border-2: #2a2f3a;   /* Softer secondary borders (inputs, inactive states) */
 
-  --radius-xs:     6px;
-  --radius-sm:     8px;
-  --radius-md:     12px;
+  /* ================= Brand / Accent =================
+   * Used for highlights, active states, or focus outlines.
+   */
+  --brand: #6aa0ff;      /* Primary accent color (links, active nav button) */
+
+  /* ================= Border Radius =================
+   * Standard radii for consistent rounded corners.
+   * Use XS for small pills, SM for buttons/inputs, MD for cards/panels.
+   */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
 }
 
 /* Base typography & background */
