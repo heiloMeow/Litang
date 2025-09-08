@@ -26,6 +26,7 @@ export default function SessionPage() {
   }, [active])
 
   // 初始化：查询是否已有未结束的会话（来自 mock API / 可切换为真实接口）
+  // Init: query for unfinished session (mock API / switchable to real API)
   useEffect(() => {
     let alive = true
     ;(async () => {
