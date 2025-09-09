@@ -4,6 +4,7 @@ import Timeline from './components/Timeline'
 import Recall from './components/Recall'
 import GraphView from './components/GraphView'
 import SessionPage from './components/SessionPage'
+import Edit from './components/Edit'
 import type { Tab } from './types'
 import './app.css'
 
@@ -32,6 +33,7 @@ export default function App() {
         {tab === 'Session'  && <SessionPage />}
         {tab === 'Timeline' && <Timeline />}
         {tab === 'Recall'   && <Recall />}
+        {tab === 'Edit'     && <Edit />}
         {tab === 'Graph'    && <GraphView />}
       </main>
     </div>

@@ -1,0 +1,13 @@
+/* Recall page layout (simple, balanced) */
+.recall-grid { display: grid; grid-template-columns: 1.6fr 1fr; grid-auto-rows: minmax(180px, auto); gap: 12px; align-items: start; }
+.recall-chat { grid-column: 1 / -1; }
+.recall-card-body { display: flex; flex-direction: column; gap: 8px; }
+.recall-msgs { flex: 1; min-height: 220px; max-height: 50vh; overflow: auto; display: grid; gap: 8px; padding-right: 4px; }
+.recall-actions { display: flex; gap: 8px; align-items: center; position: sticky; bottom: 0; background: var(--surface-1); border-top: 1px solid var(--border-1); padding-top: 8px; }
+
+.recall-empty { opacity: .75; font-size: 12px; padding: 8px 0; }
+
+@media (max-width: 900px) {
+  .recall-grid { grid-template-columns: 1fr; }
+  .recall-chat { grid-column: 1; }
+}

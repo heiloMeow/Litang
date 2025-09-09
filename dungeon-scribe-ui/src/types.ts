@@ -23,8 +23,8 @@ export type NodeType =
  * 应用的主要导航标签
  * Main navigation tabs of the app
  */
-export const TABS = ['Session', 'Timeline', 'Recall', 'Graph'] as const
-export type Tab = typeof TABS[number]  // "Session" | "Timeline" | "Recall" | "Graph"
+export const TABS = ['Session', 'Timeline', 'Recall', 'Edit', 'Graph'] as const
+export type Tab = typeof TABS[number]  // "Session" | "Timeline" | "Recall" | "Edit" | "Graph"
 
 /** 
  * Character — 角色

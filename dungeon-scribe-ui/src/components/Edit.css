@@ -1,0 +1,14 @@
+/* Edit page layout */
+.edit-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; align-items: start; }
+.edit-list { max-height: 60vh; overflow: auto; display: grid; gap: 8px; }
+.edit-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border: 1px solid var(--border-1); border-radius: var(--radius-sm); background: var(--surface-3); cursor: pointer; transition: background 120ms ease, box-shadow 120ms ease, border-color 120ms ease; }
+.edit-item:hover { background: rgba(255,255,255,0.04); }
+/* Use inset box-shadow instead of outline to avoid overflow of the blue focus ring */
+.edit-item.is-active { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand) inset; }
+.edit-form { display: grid; gap: 10px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.edit-actions { display: flex; gap: 8px; }
+
+@media (max-width: 900px) {
+  .edit-grid { grid-template-columns: 1fr; }
+}

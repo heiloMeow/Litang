@@ -19,11 +19,6 @@ export const locations: Location[] = [
 export const quests: Quest[] = [
   { id:'q-heist', name:'The Vault Heist', status:'ONGOING' }
 ]
-edges: [
-  { data: { source: 'c-rogue', target: 'e-1', label: 'participates', type: 'character-event' } },
-  { data: { source: 'l-town', target: 'e-1', label: 'location', type: 'location-event' } },
-  { data: { source: 'q-vault', target: 'e-1', label: 'quest', type: 'quest-event' } }
-]
 
 // 基础事件（一直保留在世界里）
 export const baseEvents: EventNode[] = [
