@@ -14,6 +14,7 @@ import { getSessions, queryTimeline } from '../api/timeline'
  */
 
 // Time formatting helper / 时间格式化
+// Used for UI display only / 仅用于 UI 展示
 const fmt = (ts: number) =>
   new Date(ts).toLocaleString('en-AU', {
     year: 'numeric',
@@ -24,9 +25,17 @@ const fmt = (ts: number) =>
   })
 
 // Unique helper / 数组去重
+// Removes duplicates (preserves first occurrence) / 去重（保留首次出现）
 const uniq = <T,>(arr: T[]) => Array.from(new Set(arr))
 
 // Tiny debounce for inputs / 轻量输入防抖
+/**
+ * Returns a debounced value that updates after the specified delay.
+ * Useful for throttling API queries while typing.
+ *
+ * 返回在指定延迟后更新的防抖值。
+ * 适合在输入时节流 API 查询，避免频繁请求。
+ */
 function useDebounced<T>(value: T, delay = 300) {
   const [v, setV] = useState(value)
   useEffect(() => {
@@ -36,6 +45,16 @@ function useDebounced<T>(value: T, delay = 300) {
   return v
 }
 
+/**
+ * Component overview / 组件概览
+ * - Fetches sessions once; fetches events whenever filters change.
+ * - Derives dropdown options from current events.
+ * - Merges sessions and events into one chronological stream for rendering.
+ *
+ * - 首次拉取会话；筛选变化时重新拉取事件。
+ * - 从当前事件结果派生下拉选项。
+ * - 将会话与事件合并为按时间排序的渲染列表。
+ */
 export default function Timeline() {
   // ===== Data states / 数据状态 =====
   const [sessions, setSessions] = useState<Session[]>([])
@@ -48,13 +67,16 @@ export default function Timeline() {
   const [selChar, setSelChar] = useState<'ALL' | string>('ALL')
   const [selLoc, setSelLoc] = useState<'ALL' | string>('ALL')
   const [selQuest, setSelQuest] = useState<'ALL' | string>('ALL')
+  // Currently opened event id (null = none) / 当前展开的事件 ID（null 表示全部折叠）
   const [openId, setOpenId] = useState<string | null>(null)
 
   // Debounced search text / 搜索词防抖
+  // Reduces API calls while typing / 输入过程中减少 API 请求频率
   const qDebounced = useDebounced(q, 300)
 
   // ===== Initial sessions fetch / 首次获取会话分隔 =====
   useEffect(() => {
+    // Note: alive flag prevents setState after unmount / 说明：alive 标志避免卸载后 setState
     let alive = true
     ;(async () => {
       try {
@@ -71,6 +93,7 @@ export default function Timeline() {
 
   // ===== Fetch events on filter change / 筛选变更时获取事件 =====
   useEffect(() => {
+    // Note: alive flag prevents setState after unmount / 说明：alive 标志避免卸载后 setState
     let alive = true
     ;(async () => {
       setLoading(true)
@@ -95,6 +118,7 @@ export default function Timeline() {
   }, [qDebounced, selChar, selLoc, selQuest])
 
   // ===== Options derived from events / 由事件聚合生成下拉项 =====
+  // Unique and sorted values for dropdowns / 为下拉选项提供去重且排序的集合
   const allCharacters = useMemo(
     () => uniq(events.flatMap(e => e.characters ?? [])).sort(),
     [events]
@@ -109,12 +133,15 @@ export default function Timeline() {
   )
 
   // ===== Local sort by timestamp / 本地按时间升序 =====
+  // Keep rendering order deterministic (ascending ts) / 保持渲染顺序可预测（按时间升序）
   const sortedEvents = useMemo(
     () => events.slice().sort((a, b) => a.ts - b.ts),
     [events]
   )
 
   // ===== Insert session marks into render list / 将会话作为分隔插入渲染序列 =====
+  // Render sessions as separators; events as items — merged by time.
+  // 会话作为分隔符，事件作为条目，按时间合并渲染。
   const withSessionMarks = useMemo(() => {
     const marks = (sessions || [])
       .slice()
@@ -178,6 +205,7 @@ export default function Timeline() {
               <div className="tl-item" key={(n.data as EventNode).id}>
                 <div className="tl-dot" />
                 <div className={`tl-card ${openId === (n.data as EventNode).id ? 'is-open' : ''}`}>
+                  {/* Header: title + time / 头部：标题 + 时间 */}
                   <div className="tl-row">
                     <div className="tl-title">{(n.data as EventNode).title}</div>
                     <div className="tl-time">{fmt((n.data as EventNode).ts)}</div>
@@ -187,6 +215,7 @@ export default function Timeline() {
                     <p className="tl-summary">{(n.data as EventNode).summary}</p>
                   )}
 
+                  {/* Tags: location, characters, quests / 标签：地点、角色、任务 */}
                   <div className="tl-tags">
                     {(n.data as EventNode).location && (
                       <span className="tag tag--loc">{(n.data as EventNode).location}</span>
@@ -199,6 +228,7 @@ export default function Timeline() {
                     ))}
                   </div>
 
+                  {/* Expand/collapse actions / 展开/折叠操作 */}
                   <div className="tl-actions">
                     <button
                       className="tl-toggle"
@@ -210,6 +240,7 @@ export default function Timeline() {
                     </button>
                   </div>
 
+                  {/* Extra details: id & related quests / 额外详情：ID 与关联任务 */}
                   <div className="tl-details">
                     <div className="kv"><span>Event ID</span><code>{(n.data as EventNode).id}</code></div>
                     <div className="kv"><span>Related quests</span><code>{((n.data as EventNode).questIds ?? []).join(', ') || '—'}</code></div>
